@@ -25,6 +25,7 @@ public class ListProfiler {
 
 	private int randomNumber;
 	private int randomIndex;
+	private int randomIndexGet;
 
 	private List<Integer> linkedList;
 	private List<Integer> arrayList;
@@ -47,11 +48,15 @@ public class ListProfiler {
 	private List<Integer> linkedListDelete;
 	private List<Integer> arrayListDelete;
 	
+	private List<Integer> linkedList1000Get;
+	private List<Integer> arrayList1000Get;
 	
 	@Setup(Level.Invocation)
 	public void init() {
 		randomNumber = new Random().nextInt(100);
 		randomIndex = new Random().nextInt(100) + 400;
+		randomIndexGet = new Random().nextInt(20) + 490;
+		
 
 	    linkedList = new LinkedList<Integer>();
 	    arrayList = new ArrayList<Integer>();	
@@ -75,15 +80,24 @@ public class ListProfiler {
         linkedListDelete = new LinkedList<Integer>();
         arrayListDelete = new ArrayList<Integer>();
         
+        
+        linkedList1000Get = new LinkedList<Integer>();
+        arrayList1000Get = new ArrayList<Integer>();
+        
+        Random random = new Random();
+        
     	for(int i = 0; i < 1000; i++) {
-    		arrayList1001.add(i);
-    		linkedList1001.add(i);
+    		arrayList1001.add(random.nextInt(1000));
+    		linkedList1001.add(random.nextInt(1000));
     		
-    		linkedListInsert.add(i);
-    		arrayListInsert.add(i);
+    		linkedListInsert.add(random.nextInt(1000));
+    		arrayListInsert.add(random.nextInt(1000));
 
-    		linkedListDelete.add(i);
-    		arrayListDelete.add(i);
+    		linkedListDelete.add(random.nextInt(1000));
+    		arrayListDelete.add(random.nextInt(1000));
+    		
+    		linkedList1000Get.add(random.nextInt(1000));
+    		arrayList1000Get.add(random.nextInt(1000));
     	}
     
     	arrayList1001.trimToSize();
@@ -185,6 +199,17 @@ public class ListProfiler {
     public void linkedListDelete(Blackhole blackhole) {
     	linkedListDelete.remove(randomIndex);
     	blackhole.consume(linkedListDelete);
+    }
+    
+    
+    @Benchmark
+    public void linkedListGetElement(Blackhole blackhole) {
+    	blackhole.consume(linkedList1000Get.get(randomIndexGet));
+    }
+    
+    @Benchmark
+    public void arrayListGetElement(Blackhole blackhole) {
+    	blackhole.consume(arrayList1000Get.get(randomIndexGet));
     }
 
 
